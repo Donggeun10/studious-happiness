@@ -1,0 +1,7 @@
+.git/
+.idea/
+dist/
+node_modules/
+*.log
+README.md
+Dockerfile
