@@ -37,8 +37,8 @@ export const config : GameConfig = {
 
         // Minimum size
         min: {
-            width: 640,
-            height: 640
+            width: window.innerWidth,
+            height: window.innerWidth
         },
         // Or set minimum size like these
         // minWidth: 800,

@@ -33,12 +33,34 @@ export class LocalStorageRepository{
     }
 }
 
-export class RedisExternalRepository {
+class ExternalDataSource {
+
+    constructor() {
+        if (new.target === ExternalDataSource) {
+            throw new Error("이 클래스는 추상 클래스이므로 인스턴스화할 수 없습니다.");
+        }
+    }
+
+    loadGameData(gameName : string, callback : any) {
+        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
+    }
+
+    loadGameDataWithGameId(gameName : string){
+        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
+    }
+
+    saveGameDataToRedis(gameName : string, data : string) {
+        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
+    }
+}
+
+export class RedisExternalRepository extends ExternalDataSource {
 
     config = {};
     restClient ;
 
     constructor() {
+        super();
         console.log('RedisExternalRepository constructor');
         this.config = {
             baseURL: '/api/v1',
@@ -86,28 +108,7 @@ export class RedisExternalRepository {
     }
 }
 
-class RedisExternalDataSource {
-
-    constructor() {
-        if (new.target === RedisExternalDataSource) {
-            throw new Error("이 클래스는 추상 클래스이므로 인스턴스화할 수 없습니다.");
-        }
-    }
-
-    loadGameData(gameName : string, callback : any) {
-        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
-    }
-
-    loadGameDataWithGameId(gameName : string){
-        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
-    }
-
-    saveGameDataToRedis(gameName : string, data : string) {
-        throw new Error("추상 메서드는 서브클래스에서 구현해야 합니다.");
-    }
-}
-
-export class CapacitorConnector extends RedisExternalDataSource {
+export class CapacitorConnector extends ExternalDataSource {
 
     private readonly baseUrl = "http://172.27.6.8:4000/v1";
 

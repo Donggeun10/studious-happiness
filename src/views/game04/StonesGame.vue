@@ -16,9 +16,16 @@ const print = (phase : string, data : object) => {
     console.log(phase, data)
 }
 
+const response = ref("");
+
+const winner = (gameName: string, uuid : string, data : any) => {
+    console.log('winner', gameName, uuid, data);
+    response.value = data;
+}
+
 const createScreenShot = () => {
     const scene = toRaw(phaserRef.value.scene);
-    scene.captureAndAsk();
+    scene.captureAndAsk(winner);
 }
 
 </script>
@@ -33,6 +40,9 @@ const createScreenShot = () => {
             <div class="col-12 col-md-4 order-md-2">
                 <div>
                     <ion-button @click="createScreenShot">ScreenShot</ion-button>
+                </div>
+                <div class="spritePosition">
+                    Result : <pre>{{ response }}</pre>
                 </div>
             </div>
         </div>

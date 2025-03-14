@@ -1,7 +1,10 @@
 import {EventBus} from "../EventBus";
 import {Scene} from 'phaser';
 import {config} from "@/views/game04/game/main";
-// import {Ollama} from 'ollama'
+import {OllamaConnector} from "@/views/game04/game/components/VisionModelConnector";
+import UUID = Phaser.Utils.String.UUID;
+import {MultiModalData} from "@/views/game04/game/components/Domains";
+
 
 export class GameScene extends Scene {
 
@@ -12,6 +15,7 @@ export class GameScene extends Scene {
         super({key: "GameScene"}); // key는 Phaser에서 Scene을 식별하기 위한 값
     }
 
+    private readonly ollamaConnector = new OllamaConnector();
     private readonly playGround = {x: 0, y: 0};
 
     // 게임 시작시에 필요한 GameObject를 정의
@@ -90,7 +94,7 @@ export class GameScene extends Scene {
     }
 
     // 캡쳐 후 Ollama Vision AI Model에 전송하여 승패를 판단하도록 함.
-    async captureAndAsk() {
+    async captureAndAsk(callback : any) {
         // webGL 인경우 캡쳐가 안될 수 있음 https://github.com/hackergrrl/phaser-capture
         // 게임 캔버스에서 이미지 데이터 URL 생성
         const dataURL = this.game.canvas.toDataURL('image/png');
@@ -102,34 +106,22 @@ export class GameScene extends Scene {
         // 링크 클릭하여 다운로드 실행
         // link.click();
         // console.log(dataURL);
+        // Ollama Vision AI Model에 전송
+        const uuid = UUID().toString();
+        const gameName = config.parent as string;
+        const data : MultiModalData = new MultiModalData();
+        data.image = dataURL;
+        data.prompt = "which color is winning?";
+        data.model = "llava-v1.5-7b-Q4_K_M";
+        data.system = " You are a friendly AI assistant. Your job is to judge the outcome of the game Gomok. "
+            + " The rule of Concave is that if five stones of the same color are placed in a row, the stone of that color wins. Continuous corresponds to horizontal, vertical and diagonal lines. "
+            + " The game board is a 19x19 grid. The intersection is the point where the horizontal and vertical lines intersect. "
+            + " The white and black stones are placed on a yellow background with 19 lines drawn horizontally and vertically."
+            + " The white and black stones are big round and placed on top of the intersection. "
+            + " Please look at the image delivered and tell us the color of the winning stone. Or you can just say that if there is no winner, there is no winner.";
 
-        // const ollama = new Ollama({host: 'http://172.27.6.8:11435'})
-        // const model = "MiniCPM-V-2_6-Q4_K_M";
-        // const systemContent = " You are a friendly AI assistant. Your job is to judge the outcome of the game Gomok. "
-        //     + " The rule of Concave is that if five stones of the same color are placed in a row, the stone of that color wins. Continuous corresponds to horizontal, vertical and diagonal lines. "
-        //     + " The game board is a 19x19 grid. The intersection is the point where the horizontal and vertical lines intersect. "
-        //     + " The white and black stones are placed on a yellow background with 19 lines drawn horizontally and vertically."
-        //     + " The white and black stones are big round and placed on top of the intersection. "
-        //     + " Please look at the image delivered and tell us the color of the winning stone. Or you can just say that if there is no winner, there is no winner.";
-        //
-        // const response = await ollama.chat({
-        //                                        model: model,
-        //                                        messages: [{
-        //                                            role: "system",
-        //                                            content: systemContent
-        //                                        },
-        //                                            {
-        //                                                role: 'user',
-        //                                                content: 'which color stone wins?',
-        //                                                image: dataURL,
-        //                                            }],
-        //                                        stream: true
-        //                                    })
-        // let answer = "";
-        // for await (const part of response) {
-        //     answer = answer.concat(part.message.content);
-        //     console.log(answer);
-        // }
+        this.ollamaConnector.retrieveOllamaVisionModel(gameName, uuid, data.toJson(), callback);
+
     }
 
 }
