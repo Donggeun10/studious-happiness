@@ -11,7 +11,7 @@
                     <ion-title size="large">Tab 2</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <Game02/>
+            <GameDude/>
         </ion-content>
     </ion-page>
 </template>
@@ -19,5 +19,5 @@
 <script setup lang="ts">
 import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent} from '@ionic/vue';
 
-import Game02 from '@/views/game02/Game02.vue';
+import GameDude from '@/views/game02/GameDude.vue';
 </script>

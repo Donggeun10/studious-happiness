@@ -1,16 +1,17 @@
 import {EventBus} from "../EventBus";
 import {Scene} from 'phaser';
-import {RedisExternalRepository} from "@/components/ts/DataStorage";
+import {CapacitorConnector, RedisExternalRepository} from "@/components/ts/DataStorage";
 import {DateTime} from "luxon";
 import {config, GameData} from "@/views/game02/game/main";
 import ArcadeSprite = Phaser.Physics.Arcade.Sprite;
+import {Utility} from "@/components/ts/Settings";
 
 
 export class GameScene extends Scene {
 
     constructor() {
         super({key: "GameScene"}); // key는 Phaser에서 Scene을 식별하기 위한 값
-        this.repository = new RedisExternalRepository();
+        this.repository = new Utility().isPC() ? new RedisExternalRepository() : new CapacitorConnector();
     }
 
     repository;

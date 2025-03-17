@@ -1,7 +1,8 @@
 import {EventBus} from '../EventBus';
 import {Scene} from 'phaser';
 import {config, GameData} from "@/views/game02/game/main";
-import {RedisExternalRepository} from "@/components/ts/DataStorage";
+import {CapacitorConnector, RedisExternalRepository} from "@/components/ts/DataStorage";
+import {Utility} from "@/components/ts/Settings";
 
 export class ScoreBoard extends Scene {
     constructor() {
@@ -9,7 +10,7 @@ export class ScoreBoard extends Scene {
 
     }
 
-    redisRepo = new RedisExternalRepository();
+    redisRepo = new Utility().isPC() ? new RedisExternalRepository() : new CapacitorConnector();
     gameId = config.parent as string;
     playGround = {x: 400, y: 300};
     scoreData : GameData[] = [];

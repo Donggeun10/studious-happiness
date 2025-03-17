@@ -1,9 +1,10 @@
 import {EventBus} from "../EventBus";
 import {Scene} from 'phaser';
 import {config} from "@/views/game04/game/main";
-import {OllamaConnector} from "@/views/game04/game/components/VisionModelConnector";
+import {OllamaCapacitorConnector, OllamaConnector} from "@/views/game04/game/components/VisionModelConnector";
 import UUID = Phaser.Utils.String.UUID;
-import {MultiModalData} from "@/views/game04/game/components/Domains";
+import {MultiModalData, MultiModalTrainData} from "@/views/game04/game/components/Domains";
+import {Utility} from "@/components/ts/Settings";
 
 
 export class GameScene extends Scene {
@@ -15,7 +16,7 @@ export class GameScene extends Scene {
         super({key: "GameScene"}); // key는 Phaser에서 Scene을 식별하기 위한 값
     }
 
-    private readonly ollamaConnector = new OllamaConnector();
+    private readonly ollamaConnector = new Utility().isPC() ? new OllamaConnector() : new OllamaCapacitorConnector();
     private readonly playGround = {x: 0, y: 0};
 
     // 게임 시작시에 필요한 GameObject를 정의
@@ -121,6 +122,24 @@ export class GameScene extends Scene {
             + " Please look at the image delivered and tell us the color of the winning stone. Or you can just say that if there is no winner, there is no winner.";
 
         this.ollamaConnector.retrieveOllamaVisionModel(gameName, uuid, data.toJson(), callback);
+
+    }
+
+    // 캡쳐 후 Ollama Vision AI Model에 사용될 데이터를 전송
+    async captureAndSend(instruction: string, llm_response: string, callback : any) {
+        // webGL 인경우 캡쳐가 안될 수 있음 https://github.com/hackergrrl/phaser-capture
+        // 게임 캔버스에서 이미지 데이터 URL 생성
+        console.log(instruction, llm_response)
+
+        const dataURL = this.game.canvas.toDataURL('image/jpg');
+        const uuid = UUID().toString();
+        const gameName = config.parent as string;
+        const data : MultiModalTrainData = new MultiModalTrainData();
+        data.instruction = instruction
+        data.response = llm_response
+        data.image = dataURL;
+
+        this.ollamaConnector.sendVisionTrainData(gameName, uuid, data.toJson(), callback);
 
     }
 

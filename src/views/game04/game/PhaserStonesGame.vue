@@ -7,7 +7,7 @@ import {Scene} from "phaser";
 // Save the current scene instance
 const scene = ref()
 const game = ref()
-const containerId = 'game4-container'
+const containerId = 'fiveStones'
 const emit = defineEmits(['current-active-scene', 'game-over-scene'])
 
 onMounted(() => {

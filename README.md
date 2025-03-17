@@ -24,7 +24,6 @@ If you have any questions or suggestions, please contact me via email angry07@na
 
 ## 3. Docker container creation and execution command
 ```
-npm run build
 docker build -t vue3-demo:local .  && docker run -p 9090:80 vue3-demo:local
 ```
 
