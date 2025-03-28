@@ -14,7 +14,7 @@ export class Preloader extends Scene
     // 외부 파일 혹은 assets을 미리 불러오기 위한 작업 처리
     preload() {
 
-        this.load.setPath("./assets/game2");
+        this.load.setPath("./assets/joystick");
         this.load.image('background', 'bg.png');
         this.load.image("sky", "sky.png");
         this.load.spritesheet("player", "dude.png", {
@@ -22,7 +22,9 @@ export class Preloader extends Scene
             frameHeight: 48,
         });
         this.load.image("ground", "platform.png");
-        this.load.image('button', 'star.png');
+        this.load.image('left', 'arrow_left.png');
+        this.load.image('right', 'arrow_right.png');
+        this.load.image('up', 'arrow_up.png');
 
     }
 

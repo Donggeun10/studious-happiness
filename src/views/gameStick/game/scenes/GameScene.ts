@@ -67,17 +67,17 @@ export class GameScene extends Scene {
         }
 
         // 가상 버튼 생성
-        this.leftButton = this.add.image(100, 500, 'button').setInteractive();
+        this.leftButton = this.add.image(80, 560, 'left').setInteractive();
         this.leftButton.on('pointerdown', this.onLeftButtonDown, this);
         this.leftButton.on('pointerup', this.onTurnButtonUp, this);
 
         // 가상 버튼 생성
-        this.rightButton = this.add.image(200, 500, 'button').setInteractive();
+        this.rightButton = this.add.image(170, 560, 'right').setInteractive();
         this.rightButton.on('pointerdown', this.onRightButtonDown, this);
         this.rightButton.on('pointerup', this.onTurnButtonUp, this);
 
         // 가상 버튼 생성
-        this.jumpButton = this.add.image(700, 500, 'button').setInteractive();
+        this.jumpButton = this.add.image(700, 560, 'up').setInteractive();
         this.jumpButton.on('pointerdown', this.onButtonDown, this);
         this.jumpButton.on('pointerup', this.onButtonUp, this);
 
